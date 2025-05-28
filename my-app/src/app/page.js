@@ -1,145 +1,55 @@
 'use client'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import Game from '@/components/game'
+import Greeter from '@/components/greeter'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 const Mine = () => {
     const levels = {
       "Easy":  {
         "columns":9,
         "rows":9,
-        "bombs": 10 
+        "bombs": 10
       },
-      "Hard": {
+      "Normal": {
         "columns":16,
         "rows":16,
-        "bombs": 20
+        "bombs": 40
       },
-      "Very Hard": {
+      "Hard": {
         "columns": 30,
         "rows": 16,
-        "bombs": 30
+        "bombs": 99
       }
     }
 
-    const [difficulty, setdifficulty] = useState("Easy")
-    const [mineGrid, setMineGrid] = useState([])
-    const [flags,setFlags] = useState(0);
-    const [gameOver, setGameOver] = useState(false)
+    const [difficulty, setdifficulty] = useState(null)
 
-    const [timer, setTimer] = useState(0);
-    useEffect(()=>{ 
-      setTimeout(() => {
-          setTimer(timer + 1);
-      }, 1000);    
-    },[timer])
-
-
-    useEffect(() => {
-      if (difficulty) {
-        let tempGrid = []
-        for (let i = 0; i < levels[difficulty].rows; i++){
-          tempGrid[i] = []
-          for (let j=0; j < levels[difficulty].columns; j++){
-            tempGrid[i][j] = {"displayed": false}
-          }
-        }
-        const initializedGrid = handleInitialization(tempGrid)
-
-        setMineGrid(initializedGrid)
-      }
-
-    },[difficulty])
-
-    const handleInitialization = (grid) => {
-      let bombs = levels[difficulty].bombs
-
-      // Placing Bombs randomly 
-      while (bombs !== 0){
-        let row = Math.floor(Math.random()*levels[difficulty].rows)
-        let col = Math.floor(Math.random()*levels[difficulty].columns)
-        if (!grid[row][col].item){
-          grid[row][col] = {...grid[row][col], item:"💣"}
-          bombs = bombs - 1
-        }
-      }
-
-      // Placing counter on blocks for number of bombs in adjacent blocks
-      grid.forEach((row, row_index) => {
-        row.forEach((cell, cell_index) => {
-          if (cell.item !== "💣") {
-            let bombCount = 0
-
-            for (let r = row_index - 1; r <= row_index + 1; r++) {
-              for (let c = cell_index - 1; c <= cell_index + 1; c++) {
-                // Skip current cell and check if cell has bomb, also used optional chaining for accesing 
-                // array's out of bound index like -1 which returns undefined
-                if (!(r === row_index && c === cell_index) && grid[r]?.[c]?.item === "💣") {
-                  bombCount++;
-                }
-              }
-            }
-
-            // Defining the cell according to adjacent bomb count
-            if (bombCount == 0){
-              grid[row_index][cell_index] = {...grid[row_index][cell_index], item:""}
-            }
-            else{
-              grid[row_index][cell_index] = {...grid[row_index][cell_index], item:bombCount}
-            }
-          }
-        })
-      })
-
-      // Returning initialized Grid
-      return grid
+    const handledifficulty = (e) => {
+      setdifficulty(e)
     }
 
-    const handleMineClick = (row, col)=> {
-      debugger;
-      if(gameOver) return;
-      const newGrid = [...mineGrid];
-      newGrid[row][col].displayed = true;
-      if(newGrid[row][col].item == ''){
-        handleSafeCell(newGrid, row, col)
-      } else if(newGrid[row][col].item === '💣'){
-        setGameOver(true)
-      }
-      setMineGrid(newGrid);
+    if (!difficulty){
+      return (
+        <Greeter handledifficulty={handledifficulty} />
+      )
     }
-
-    const handleSafeCell = (grid, row, col) => {
-      for (let r = row - 1; r <= row + 1; r++) {
-            for (let c = col - 1; c <= col + 1; c++) {
-              if (grid[r]?.[c] !== undefined && !(r === row && c === col) && grid[r]?.[c]?.item !== "💣" && !grid[r]?.[c]?.displayed){
-                grid[r][c].displayed = true
-                if (grid[r][c].item === '') {
-                  handleSafeCell(grid, r, c)
-                }
-              }
-            }
-          }
-    }
-
 
   return (
-    <div className='min-h-screen flex flex-col justify-center items-center'>
-        <p>Seconds: {timer}</p>
-        <p>Flags: {flags}</p>
-        {gameOver && <p className='text-red-600'>Game Over! You clicked on a mine!</p>}
-        {mineGrid?.length > 0 ? 
-          (mineGrid.map((item,id)=>{
-            return(
-              <div className='flex' key={id}>
-                  {item.map((val, idx)=>{
-                      return (
-                          <div key={idx} onClick={()=>handleMineClick(id,idx)} className={`h-10 w-10 border text-black border-black ${val.displayed ? 'bg-[#808080]' : 'bg-[#C0C0C0]'}`}>  
-                            {val.displayed? <div className='p-2.5'>{val.item}</div> : <Image src='/Minesweeper_unopened_square.svg' alt='square' priority width={40} height={30} className='object-fit' />}                    
-                          </div>
-                      )
-                  })}
-              </div>
-            )
-        })) : null}
+    <div className='min-h-screen flex flex-col grow justify-center items-center bg-[#4B421B]'>
+        <div className={`h-full w-[40%] ${difficulty === "Hard" && 'w-[60%]'} flex flex-col justify-center items-center bg-[#D7EAE2]`}> 
+          <Tabs defaultValue={difficulty} className="w-full ">
+            <TabsList className="w-full bg-[#D7EAE2] rounded-none focus:bg-gray-700">
+              <TabsTrigger className="focus:bg-gray-700 " value="Easy" onClick={(e)=>{handledifficulty(e.target.innerText)}}>Easy</TabsTrigger>
+              <TabsTrigger value="Normal" onClick={(e)=>{handledifficulty(e.target.innerText)}}>Normal</TabsTrigger>
+              <TabsTrigger value="Hard" onClick={(e)=>{handledifficulty(e.target.innerText)}}>Hard</TabsTrigger>
+            </TabsList>
+            <TabsContent value="Easy"><Game difficulty={difficulty} levels={levels}/></TabsContent>
+            <TabsContent value="Normal"><Game difficulty={difficulty} levels={levels}/></TabsContent>
+            <TabsContent value="Hard"><Game difficulty={difficulty} levels={levels}/></TabsContent>
+          </Tabs>
+          
+        </div>
     </div>
   )
 }
