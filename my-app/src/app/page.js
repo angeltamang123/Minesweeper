@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 const Mine = () => {
@@ -131,9 +132,9 @@ const Mine = () => {
               <div className='flex' key={id}>
                   {item.map((val, idx)=>{
                       return (
-                          <div key={idx} onClick={()=>handleMineClick(id,idx)} className={` p-3 h-10 w-10 border text-black border-black ${val.displayed ? 'bg-[#808080]' : 'bg-[#C0C0C0] rounded-sm shadow-2xl'}`}>
-                              {val.displayed? val.item : ''}
-                              </div>
+                          <div key={idx} onClick={()=>handleMineClick(id,idx)} className={`h-10 w-10 border text-black border-black ${val.displayed ? 'bg-[#808080]' : 'bg-[#C0C0C0]'}`}>  
+                            {val.displayed? <div className='p-2.5'>{val.item}</div> : <Image src='/Minesweeper_unopened_square.svg' alt='square' priority width={40} height={30} className='object-fit' />}                    
+                          </div>
                       )
                   })}
               </div>
