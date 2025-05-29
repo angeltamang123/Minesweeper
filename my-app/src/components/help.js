@@ -19,17 +19,17 @@ const Help = ({ open, onOpenChange }) => {
         </DrawerHeader>
 
         <div className="space-y-2 max-w-lg">
-          <div className='bg-white border-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white'>
-            <h3 className="font-bold font-mono text-black ml-2">Left-Click</h3>
+          <div className='bg-white border-2 p-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white'>
+            <h3 className="font-bold font-mono text-black ml-2">Left-Click / Tap</h3>
             <p className='font-mono text-sm text-black ml-2'>Reveal a square. Mines = Game Over, <br/> Numbers = nearby mines.</p>
           </div>
 
-          <div className='bg-white border-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white'>
-            <h3 className="font-bold font-mono text-black ml-2">Right-Click</h3>
+          <div className='bg-white border-2 p-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white'>
+            <h3 className="font-bold font-mono text-black ml-2">Right-Click / Hold for Touch Screens</h3>
             <p className='font-mono text-sm text-black ml-2'>Place/remove 🚩 to mark suspected mines.</p>
           </div>
 
-          <div className='bg-white border-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white'>
+          <div className='bg-white border-2 p-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white'>
             <h3 className="font-bold font-mono text-black ml-2">Numbers</h3>
             <ul className="list-disc pl-5 font-mono text-sm text-black ml-2">
               <li><strong>"1"</strong>: 1 mine in adjacent squares.</li>
@@ -39,12 +39,12 @@ const Help = ({ open, onOpenChange }) => {
           </div>
 
           <div className="bg-white border-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white p-3">
-            <h3 className="font-bold font-mono text-black">Tips</h3>
-            <p className='className="font-mono text-sm text-black"'>Flag cell with adjacents as number</p>
+            <h3 className="font-bold font-mono text-black ml-2">Tips</h3>
+            <p className="font-mono text-sm text-black ml-2">Flag cell with adjacents as number</p>
           </div>
         </div>
 
-        <DrawerFooter>
+        <DrawerFooter className="-mt-3">
           <DrawerClose asChild>
             <Button variant="outline" className="bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#808080]
              border-b-[#808080] hover:bg-[#d0d0d0] active:border-t-[#808080] active:border-l-[#808080] 
