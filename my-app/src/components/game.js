@@ -145,7 +145,7 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
         setGameStart(true)
       }
       const newGrid = [...mineGrid];
-
+      debugger;
       // Handles left Click
       if(e.type === 'click'){
         if (newGrid[row][col].flagged) return; // Cannot left-click on flagged cells
@@ -180,6 +180,12 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
             for (let c = col - 1; c <= col + 1; c++) {
               if (grid[r]?.[c] !== undefined && !(r === row && c === col) && grid[r]?.[c]?.item !== "bomb" && !grid[r]?.[c]?.displayed){
                 grid[r][c].displayed = true
+                // remove flagged if the cell was flagged after cleanup
+                if (grid[r][c].flagged){
+                  grid[r][c].flagged = false
+                  setFlags(prevFlags=>prevFlags+1)
+                }
+
                 if (grid[r][c].item === '') {
                   handleSafeCell(grid, r, c)
                 }
