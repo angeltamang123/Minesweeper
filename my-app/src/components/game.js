@@ -1,7 +1,7 @@
 "use client"
-import { FlagTriangleLeft, Frown, Smile } from 'lucide-react';
+import { FlagTriangleLeft, Frown, Laugh, Smile } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { GiLandMine, GiMineExplosion } from "react-icons/gi";
 import Explosion from './explosion';
 import Loss from './lossDialog';
@@ -12,17 +12,21 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
     const [score, setScore] = useState(0);
     const [showLoss, setShowLoss] = useState(false)
     const [gameOver, setGameOver] = useState(false)
+    const [gameWon, setGameWon] = useState(false)
     const [gameStart, setGameStart] = useState(false)
     const [bomb, setBomb] = useState(<GiLandMine className={`${difficulty==="Easy" && 'size-6 -m-1 -ml-1.5'}
             ${difficulty ==="Normal" && 'size-4 mt-0.5 -ml-0.5'} ${difficulty==="Hard" && '-ml-0.5 mt-0.5'}` }/>)
 
     const [timer, setTimer] = useState(0);
+    const correct = useRef(0)
+    const [correctCells, setCorrectCells] = useState(null) 
     
 
     // For Timer
     useEffect(()=>{ 
       setTimeout(() => {
           if (gameOver) return
+          if (gameWon) return
           if (gameStart) setTimer(timer + 1);
       }, 1000);    
     },[timer, gameStart])
@@ -37,6 +41,9 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
     // Initialization after difficulty is set
     useEffect(() => {
       if (difficulty) {
+        // First obtaining number of correct cells to check win condition
+        setCorrectCells(levels[difficulty].rows * levels[difficulty].columns - levels[difficulty].bombs)
+        
         let tempGrid = []
         for (let i = 0; i < levels[difficulty].rows; i++){
           tempGrid[i] = []
@@ -64,16 +71,27 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
             tempGrid[id][idx].displayed = true
           })
         })
-
-        setMineGrid(tempGrid)
         setShowLoss(true)
-      
+        setMineGrid(tempGrid)   
       }
     }, [gameOver])
 
     // Check for Win Condition
     useEffect(()=>{
-      
+      if(!gameOver){
+        // Check number of correct clicks
+        correct.current = 0
+        mineGrid.forEach((row)=>{
+          row.forEach((col)=>{
+            if(col.displayed === true && col.item !== "bomb"){
+              correct.current = correct.current + 1
+            } 
+          })
+        })
+        if (correctCells === correct.current){
+          setGameWon(true)
+        }   
+      }
     }, [mineGrid])
 
     const handleInitialization = (grid, difficulty) => {
@@ -128,6 +146,7 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
         setGameStart(true)
       }
       const newGrid = [...mineGrid];
+      debugger;
       // Handles left Click
       if(e.type === 'click'){
         if (newGrid[row][col].flagged) return; // Cannot left-click on flagged cells
@@ -178,7 +197,7 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
                 <p>Seconds </p>
                 <p className='text-center'>{timer}</p>
             </div>
-            {gameOver ? <Frown className='size-8 my-3 text-black fill-yellow-500' />: <Smile className='size-8 my-3 text-black fill-yellow-500'/>}
+            {gameOver ? <Frown className='size-8 my-3 text-black fill-yellow-500' />: !gameWon ? <Smile className='size-8 my-3 text-black fill-yellow-500'/> : <Laugh className='size-8 my-3 text-black fill-yellow-500' />}
             <div className={`${difficulty === "Hard" ? 'flex gap-4 items-center px-2 w-30': 'flex flex-col'} justify-between  border-2 border-black p-1 rounded shadow-black shadow-sm text-white`}> 
                 <p className='flex'>Flags <FlagTriangleLeft className='text-yellow-400 fill-red-600'/></p>
                 <p className='text-center'>{flags}</p>
