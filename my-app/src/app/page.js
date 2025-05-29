@@ -4,6 +4,7 @@ import Game from '@/components/game'
 import Greeter from '@/components/greeter'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Help from '@/components/help'
+import { cn } from '@/lib/utils'
 
 const Mine = () => {
     const levels = {
@@ -46,20 +47,44 @@ const Mine = () => {
     }
 
   return (
-    <div className='min-h-screen flex flex-col grow justify-center items-center bg-[#4B421B]'>
-        <div className={`h-[570px] -mt-2 w-[40%] ${difficulty === "Hard" && 'w-[60%]'} flex flex-col justify-start items-center bg-[#D7EAE2]`}> 
-          <p className='text-2xl font-bold font-sans text-black'>Minesweeper</p>
-          <Tabs defaultValue={difficulty} className="w-full">
-            <TabsList className="w-full border-t-2 border-b-2 -mb-1.5 border-black bg-[#D7EAE2] rounded-none focus:bg-gray-700">
-              <TabsTrigger value="Easy" onClick={(e) => tabCickHandler(e.target.innerText)}>Easy</TabsTrigger>
-              <TabsTrigger value="Normal" onClick={(e) => tabCickHandler(e.target.innerText)}>Normal</TabsTrigger>
-              <TabsTrigger value="Hard" onClick={(e) => tabCickHandler(e.target.innerText)}>Hard</TabsTrigger>
+    <div className='max-h-screen max-w-screen lg-tablets:min-h-screen lg-tablets:min-w-screen flex flex-col grow overflow-visible lg-tablets:items-center lg-tablets:justify-center bg-gradient-to-br from-[#008080] to-[#004040]"'>
+        <div className={`lg-tablets:relative absolute w-full h-full lg-tablets:h-max lg-tablets:w-[80%] flex flex-col justify-start items-center bg-[#c0c0c0] border-4 border-t-white border-l-white border-r-[#808080] border-b-[#808080] shadow-2xl`}> 
+          <div className="w-full bg-gradient-to-r from-[#0000ff] to-[#000080] text-white px-3 py-1 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-[#ff0000] border border-[#800000]"></div>
+            <span className="font-bold text-sm font-mono">Minesweeper</span>
+          </div>
+          <div className="flex gap-1">
+            <div className="w-4 h-3 bg-[#c0c0c0] border border-[#808080]"></div>
+            <div className="w-4 h-3 bg-[#c0c0c0] border border-[#808080]"></div>
+            <div className="w-4 h-3 bg-[#c0c0c0] border border-[#808080]"></div>
+          </div>
+        </div>
+          <Tabs defaultValue={difficulty} className="w-full bg-[#c0c0c0]">
+            <TabsList className="w-full bg-[#c0c0c0] border-b-2 border-[#808080] rounded-none p-0">
+              <TabsTrigger value="Easy" onClick={(e) => tabCickHandler(e.target.innerText)} 
+                className="data-[state=active]:bg-[#c0c0c0] data-[state=active]:border-t-2 data-[state=active]:border-l-2
+                 data-[state=active]:border-white data-[state=active]:border-r-[#808080] data-[state=active]:border-b-[#c0c0c0]
+                  bg-[#c0c0c0] border-2 border-t-[#808080] border-l-[#808080] border-white border-r-white font-mono text-black hover:bg-[#d0d0d0]"
+                >Easy</TabsTrigger>
+              <TabsTrigger value="Normal" onClick={(e) => tabCickHandler(e.target.innerText)}
+                className="data-[state=active]:bg-[#c0c0c0] data-[state=active]:border-t-2 data-[state=active]:border-l-2
+                 data-[state=active]:border-white data-[state=active]:border-r-[#808080] data-[state=active]:border-b-[#c0c0c0]
+                  bg-[#c0c0c0] border-2 border-t-[#808080] border-l-[#808080] border-white border-r-white font-mono text-black hover:bg-[#d0d0d0]"
+                >Normal</TabsTrigger>
+              <TabsTrigger value="Hard" onClick={(e) => tabCickHandler(e.target.innerText)}
+                className="data-[state=active]:bg-[#c0c0c0] data-[state=active]:border-t-2 data-[state=active]:border-l-2
+                 data-[state=active]:border-white data-[state=active]:border-r-[#808080] data-[state=active]:border-b-[#c0c0c0]
+                  bg-[#c0c0c0] border-2 border-t-[#808080] border-l-[#808080] border-white border-r-white font-mono text-black hover:bg-[#d0d0d0]"
+                >Hard</TabsTrigger>
             </TabsList>
             <TabsContent key={`game-easy-${gameKey}`} value="Easy"><Game difficulty="Easy" onRestartRequest={handleChangeDifficultyAndRestart} levels={levels} /></TabsContent>
             <TabsContent key={`game-normal-${gameKey}`} value="Normal"><Game difficulty="Normal" onRestartRequest={handleChangeDifficultyAndRestart} levels={levels} /></TabsContent>
             <TabsContent key={`game-hard-${gameKey}`} value="Hard"><Game difficulty="Hard" onRestartRequest={handleChangeDifficultyAndRestart} levels={levels} /></TabsContent>
           </Tabs> 
-          <button onClick={()=> setShowHelp(true)} className={`text-end cursor-pointer text-green-600 hover:text-shadow-md w-full ${difficulty === "Normal" && 'mt-8'} ${difficulty === "Easy" && 'mt-6'} ${difficulty === "Hard" && 'mt-2'} mr-8`}>How to Play?</button>
+          <div className='w-full h-full flex items-end mt-2 mb-2 lg-tablets:mt-0 lg-tablets:mb-0'>
+            <button onClick={()=> setShowHelp(true)} className={`bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#808080] border-b-[#808080] px-3 py-1 font-mono text-sm text-black hover:bg-[#d0d0d0] active:border-t-[#808080] active:border-l-[#808080] active:border-r-white active:border-b-white`}>How to Play?</button>
+          </div>
           {showHelp && <Help open={showHelp} onOpenChange={setShowHelp} />}
         </div>
     </div>

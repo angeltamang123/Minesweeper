@@ -20,7 +20,6 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
     const [timer, setTimer] = useState(0);
     const correct = useRef(0)
     const [correctCells, setCorrectCells] = useState(null) 
-    
 
     // For Timer
     useEffect(()=>{ 
@@ -146,6 +145,7 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
         setGameStart(true)
       }
       const newGrid = [...mineGrid];
+
       // Handles left Click
       if(e.type === 'click'){
         if (newGrid[row][col].flagged) return; // Cannot left-click on flagged cells
@@ -158,7 +158,7 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
         setMineGrid(newGrid);
       }
       else if (e.type === 'contextmenu'){
-        // Handles Right click supporting flagging logics
+        // Handles Right click supporting flagging logics, also long pressing on touch is same event contextmenu
         e.preventDefault()
         if (newGrid[row][col].displayed) return; // Cannot flag displayed cells
         if (!newGrid[row][col].flagged){         
@@ -188,43 +188,46 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
           }
     }
 
-
   return (
-    <div className='relative flex flex-col items-center h-full w-full'>
-        <div className={`flex justify-between w-[73%] ${difficulty === "Hard" && 'w-[95%]'} px-2 py-1 bg-gray-600 text-black border-2 border-black rounded shahow-xl `} >
-            <div className={`${difficulty === "Hard" ? 'flex gap-4 items-center px-2 w-30': 'flex flex-col'} justify-between border-2 border-black p-1 rounded shadow-black shadow-sm text-white`}>
+    <div className='relative flex flex-col items-center h-full mx-auto w-fit'>
+        <div className={`flex justify-between w-full px-2 py-1 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#808080] border-b-[#808080]`} >
+            <div className={`${difficulty === "Hard" ? 'flex gap-4 items-center px-2 w-35': 'flex flex-col'} justify-between bg-black border-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white p-2 font-mono text-red-500 font-bold`}>
                 <p>Seconds </p>
                 <p className='text-center'>{timer}</p>
             </div>
             {gameOver ? <Frown className='size-8 my-3 text-black fill-yellow-500' />: !gameWon ? <Smile className='size-8 my-3 text-black fill-yellow-500'/> : <Laugh className='size-8 my-3 text-black fill-yellow-500' />}
-            <div className={`${difficulty === "Hard" ? 'flex gap-4 items-center px-2 w-30': 'flex flex-col'} justify-between  border-2 border-black p-1 rounded shadow-black shadow-sm text-white`}> 
+            <div className={`${difficulty === "Hard" ? 'flex gap-4 items-center px-2 w-35': 'flex flex-col'} justify-between  bg-black border-2 border-t-[#808080] border-l-[#808080] border-r-white border-b-white p-2 font-mono text-red-500 font-bold`}> 
                 <p className='flex'>Flags <FlagTriangleLeft className='text-yellow-400 fill-red-600'/></p>
                 <p className='text-center'>{flags}</p>
             </div>
         </div>
-        <div className={`w-[73%] ${difficulty === "Hard" && 'w-[95%]'} px-1 py-1 bg-gray-600 text-black border-2 border-black rounded shahow-xl shadow-black`}>
+        <div className={`bg-[#969393] border-4 border-t-[#808080] border-l-[#808080] border-r-white border-b-white p-2`}>
             {mineGrid?.length > 0 ?
                 (mineGrid.map((item,id)=>{
                 return(
-                    <div className='flex' key={id}>
+                    <div className={`flex ${difficulty==="Normal" && 'ml-0.5'}`} key={id}>
                         {item.map((val, idx)=>{
                             return (
                                 <div key={idx} 
-                                onClick={(e)=>handleMineClick(id,idx,e)} 
+                                onClick={(e)=>handleMineClick(id,idx,e)}                       
                                 onContextMenu={(e)=>handleMineClick(id,idx,e)} 
-                                className={`${difficulty === "Easy" && "h-10 w-10"} ${difficulty === "Normal" && "h-5.5 w-6"} ${difficulty === "Hard" && "h-6 w-6"} border-t overflow-hidden border-l text-black border-black ${val.displayed ? 'bg-[#808080]' : 'bg-[#C0C0C0]'}`}>
+                                className={`${difficulty === "Easy" && "h-8 w-8 normal-phones:h-10 normal-phones:w-10 sm:h-10 sm:w-10 sm-laptops:h-10 lg-tablets:w-10 lg-tablets:h-10"} 
+                                 ${difficulty === "Normal" && "h-4.5 w-4.5 normal-phones:h-6 normal-phones:w-6 lg-phone:h-6 lg-phones:w-6 sm:h-6 sm:w-6 "} 
+                                 ${difficulty === "Hard" && "h-3 w-3 normal-phones:h-3 normal-phones:w-3 lg-phones:h-4.5 lg-phones:w-4.5 sm:h-5 sm:w-5 "}
+                                 border-t overflow-hidden border-l text-black border-black 
+                                 ${val.displayed ? 'bg-[#808080]' : 'bg-[#C0C0C0]'}`}>
                                 {val.displayed? 
-                                  <div className={`${difficulty === "Easy" && "p-2.5 ml-1"} ${difficulty === "Normal" && "ml-1"} ${difficulty === "Hard" && "ml-1.5"}` }>
+                                  <div className={`${difficulty === "Easy" && "ml-2 mt-1 normal-phones:p-2.5 normal-phones:ml-1"} ${difficulty === "Normal" && "ml-1 normal-phones:ml-2 normal-phones:mt-1 text-sm"} ${difficulty === "Hard" && "ml-0.5 -mt-0.5 normal-phones:ml-0.5 normal-phones:-mt-0.5 lg-phones:ml-1 lg-phones:mt-0 sm:ml-1.5 sm:mt-0.5 text-xs"}` }>
                                     {val.item === "bomb" ? (<Explosion>{bomb}</Explosion>)                                 
                                     : val.item}
                                   </div> 
                                 : (
-                                  <div className='flex flex-col'>
+                                  <div className='flex flex-col h-full w-full'>
                                     <Image src='/Minesweeper_unopened_square.svg' alt='square' priority width={40} height={30} className='object-fit' />
                                     {val.flagged && <FlagTriangleLeft className={`text-black rotate-[-20deg] fill-red-600 absolute
-                                      ${difficulty === "Easy" && 'size-6 mt-2 ml-1.5 z-10'}
-                                      ${difficulty === "Normal" && 'size-4 mt-1'}
-                                      ${difficulty === "Hard" && 'size-4 mt-1 ml-0.5'}
+                                      ${difficulty === "Easy" && 'size-6 mt-2 ml-1.5'}
+                                      ${difficulty === "Normal" && 'size-4 mt-1 ml-1'}
+                                      ${difficulty === "Hard" && 'normal-phones:size-3 lg-phones:mt-1 sm:size-4 sm:ml-0.5'}
                                       `}/>}
                                   </div>
                                 )}

@@ -4,6 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+   /*Custom breakpoints*/
+  --breakpoint-lg-tablets: 920px;
+  --breakpoint-sm-laptops: 1160px;
+  --breakpoint-lg-phones: 412px;
+  --breakpoint-normal-phones: 345px;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
