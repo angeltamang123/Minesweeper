@@ -20,7 +20,7 @@ const Win = ({open, onOpenChange, time, difficulty, onRestart }) => {
         }else if (time < 240){
             setScore(13 * multiplier[difficulty] * (480-time))
         }else{
-            setScore(2 * multiplier[difficulty] (1800-time))
+            setScore(2 * multiplier[difficulty] * (1800-time))
         }
     }
   },[open])
