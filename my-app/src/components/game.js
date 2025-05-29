@@ -5,11 +5,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { GiLandMine, GiMineExplosion } from "react-icons/gi";
 import Explosion from './explosion';
 import Loss from './lossDialog';
+import Win from './winDialog';
 
 const Game = ({ difficulty , levels , onRestartRequest}) => {
     const [mineGrid, setMineGrid] = useState([])
     const [flags,setFlags] = useState(0);
-    const [score, setScore] = useState(0);
     const [showLoss, setShowLoss] = useState(false)
     const [gameOver, setGameOver] = useState(false)
     const [gameWon, setGameWon] = useState(false)
@@ -146,7 +146,6 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
         setGameStart(true)
       }
       const newGrid = [...mineGrid];
-      debugger;
       // Handles left Click
       if(e.type === 'click'){
         if (newGrid[row][col].flagged) return; // Cannot left-click on flagged cells
@@ -238,6 +237,7 @@ const Game = ({ difficulty , levels , onRestartRequest}) => {
         </div>
 
         {showLoss && (<Loss grid={mineGrid} open={showLoss} onOpenChange={setShowLoss} difficulty={difficulty} onRestart={onRestartRequest}/>)}
+        {gameWon && (<Win open={gameWon} onOpenChange={setGameWon} time={timer} difficulty={difficulty} onRestart={onRestartRequest}/>)}
     </div>
   )
 }
